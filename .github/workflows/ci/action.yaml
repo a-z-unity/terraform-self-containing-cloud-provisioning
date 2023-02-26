@@ -1,13 +1,17 @@
-name: ci
-description: terraform ci action
+name: terraform-ci
+description: terraform ci actions
+
+inputs:
+  working_directory:
+    description: sources directory
+    required: true
 
 runs:
   using: "composite"
 
   steps:
-    - run: terraform init
+    - run: terraform -chdir=${{ inputs.directory }}/src/ init
       shell: bash
-      working-directory: '/src'
 #    - run: terraform fmt -check
 #      working-directory: /src
 #    - run: terraform plan -input=false

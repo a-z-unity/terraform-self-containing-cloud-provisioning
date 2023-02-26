@@ -9,10 +9,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  ci:
     name: 'terraform-ci'
     runs-on: ubuntu-latest
-    environment: ci
 
     defaults:
       run:
@@ -24,7 +23,8 @@ jobs:
 
       - name: ci department/backend
         uses: "./.github/workflows/ci"
-        working-directory: './department/backend'
+        with:
+          working_directory: './department/backend'
 
 #      - name: ci department/infrastructure
 #        uses: /templates/ci.yml
