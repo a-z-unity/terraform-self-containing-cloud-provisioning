@@ -1,8 +1,8 @@
-name: CI
+name: ci
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "main", "dev", "feature/*" ]
   pull_request:
     branches: [ "main", "dev" ]
 
@@ -10,13 +10,23 @@ on:
 
 jobs:
   build:
+    name: 'terraform-ci'
     runs-on: ubuntu-latest
+    environment: ci
+
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - uses: actions/checkout@v3
-      - name: Run a one-line script
-        run: echo Hello, world!
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - uses: hashicorp/setup-terraform@v2
+
+      - name: ci department/backend
+        uses: "./.github/workflows/ci"
+        working-directory: './department/backend'
+
+#      - name: ci department/infrastructure
+#        uses: /templates/ci.yml
+#        with:
+#          working_directory: ./department/infrastructure

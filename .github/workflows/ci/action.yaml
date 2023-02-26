@@ -1,0 +1,14 @@
+name: ci
+description: terraform ci action
+
+runs:
+  using: "composite"
+
+  steps:
+    - run: terraform init
+      shell: bash
+      working-directory: '/src'
+#    - run: terraform fmt -check
+#      working-directory: /src
+#    - run: terraform plan -input=false
+#      working-directory: /src
