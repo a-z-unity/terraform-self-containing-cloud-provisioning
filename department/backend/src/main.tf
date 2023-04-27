@@ -110,10 +110,50 @@ module "github_branch_protection_rules" {
   for_each = toset([
     data.github_branch.main.branch, github_branch.dev.branch
   ])
-  source                          = "../../modules/github_branch_protection_rule"
+  source                          = "../../../modules/github_branch_protection_rule"
   repository_id                   = github_repository.department_ioc.name
   pattern                         = each.value
   status_check                    = "ci.yml"
   dismissal_restrictions_user     = data.github_user.owner.node_id
   required_approving_review_count = 1
+}
+
+resource "azuredevops_project" "devops_project" {
+  name               = local.resource_names.devops_project
+  visibility         = "private"
+  work_item_template = "Scrum"
+  features = {
+    repositories = "disabled"
+    boards       = "disabled"
+    pipelines    = "enabled"
+    testplans    = "disabled"
+    artifacts    = "disabled"
+  }
+}
+
+resource "azuredevops_serviceendpoint_github" "service_endpoint_github" {
+  project_id            = azuredevops_project.devops_project.id
+  service_endpoint_name = "GitHub Connection (Terraform)"
+  description           = ""
+
+  auth_oauth {
+    oauth_configuration_id = "9b079bb9-758f-452e-a3e8-8deed3054af2"
+  }
+}
+
+resource "azuredevops_build_definition" "build_definition" {
+  project_id = azuredevops_project.devops_project.id
+  name       = "My Awesome Build Pipeline"
+  path       = "\\"
+
+  ci_trigger {
+    use_yaml = true
+  }
+
+  repository {
+    repo_type   = "GitHub"
+    repo_id     = "https://github.com/a-z-unity/terraform-self-containing-cloud-provisioning"
+    branch_name = github_branch_default.default.branch
+    yml_path    = ".azure_devops/pipelines/ci.yml"
+  }
 }

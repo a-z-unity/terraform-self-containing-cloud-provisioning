@@ -1,4 +1,6 @@
 terraform {
+  required_version = "~> 1.3"
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -50,8 +52,6 @@ locals {
   prefix = "a-z-mini-department"
   resource_names = {
     service_principal          = format("%s-ad-app-sp", local.prefix)
-    key_vault                  = format("%s-kv", local.prefix)
-    service_principal_password = format("%s-ad-app-sp-password", local.prefix)
   }
   owners = toset(concat([for user in data.azuread_user.users : user.object_id], [data.azuread_client_config.current.object_id]))
 }

@@ -1,4 +1,6 @@
 terraform {
+  required_version = "~> 1.3"
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -11,6 +13,10 @@ terraform {
     github = {
       source  = "integrations/github"
       version = "~> 5"
+    }
+    azuredevops = {
+      source  = "microsoft/azuredevops"
+      version = "~> 0"
     }
   }
 

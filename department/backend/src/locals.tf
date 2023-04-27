@@ -12,6 +12,7 @@ locals {
     department_backend_container                = "department-backend"
     team_projects_backends                      = toset(split(",", var.team_projects_backends))
     service_principal                           = format("%s-ad-app-sp", local.prefix)
+    devops_project                              = format("%s-pipelines", local.prefix)
   }
 
   contributor_emails = split(";", var.contributors)
